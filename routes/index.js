@@ -33,4 +33,9 @@ router.get('/delete/:id', (req, res, next) => {
   .catch(err => `Error : ${err}`)
 })
 
+router.post('/findOptions', (req, res, next) => {
+  const {symbolName} = req.body;
+  res.render('options', {symbolName})
+})
+
 module.exports = router;

@@ -1,11 +1,23 @@
 <h2 class="mt-3">Add a new company</h2>
 
 <form class="form-group" action="/add" method="post">
+  <p>If you already know the name and the symbol, introduce it here</p>
+
   <label for="">Name:</label>
   <input class="form-control" type="text" name="name" placeholder="Ex: 'Microsoft'">
 
   <label for="">Symbol name:</label>
   <input class="form-control" type="text" name="symbolName" placeholder="Ex: 'MSFT'">
 
+
   <button class="btn btn-primary mt-3" type="submit">ADD</button>
+</form>
+
+<form class="form-group" action="/findOptions" method="post">
+  <p>If you need help to look for a company, introduce anything here</p>
+
+  <label for="">Symbol name:</label>
+  <input class="form-control" type="text" name="symbolName" placeholder="Introduce here...">
+
+  <button id="botonSearch" class="btn btn-primary mt-3" type="submit">SEARCH</button>
 </form>

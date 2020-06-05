@@ -35,9 +35,9 @@ function printCharts(shortName) {
   } // closes printTheChart()
 }
 
-const actions = document.querySelectorAll('#actionsCard')
+const actions = document.querySelectorAll('#actionsCard');
 
-for (let i=0; i<actions.length; i++) {
-  const name = actions[i].getElementsByClassName('symbolName')[0].innerText
-  printCharts(name)
+for (action of actions) {
+  const [{innerText: name}] = action.getElementsByClassName('symbolName');
+  printCharts(name);
 }
