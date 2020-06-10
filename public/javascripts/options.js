@@ -8,6 +8,7 @@ async function showOptions(symbolName) {
     
     for (let i = 0; i < optionsArr.length; i++) {
       const element = document.createElement('li');
+      element.setAttribute('onclick', `putData('${optionsArr[i]['1. symbol']}', '${optionsArr[i]['2. name']}')`);
       element.innerText = `Symbol: ${optionsArr[i]['1. symbol']} - Company name: ${optionsArr[i]['2. name']}`;
       list.appendChild(element);
     }
@@ -17,6 +18,10 @@ const botonAdd = document.getElementById('botonAdd');
 
 if (botonAdd) {
     const symbol = document.getElementById('symbolName').innerText;
-    console.log('symbol:', symbol);
     showOptions(symbol);
+}
+
+function putData(symbol, name) {
+  document.getElementById('name').value = name;
+  document.getElementById('symbol').value = symbol;
 }
