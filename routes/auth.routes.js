@@ -82,4 +82,10 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
+//LOGOUT
+router.post("/logout", (req, res, next) => {
+  req.session.destroy();
+  res.redirect("/");
+});
+
 module.exports = router;

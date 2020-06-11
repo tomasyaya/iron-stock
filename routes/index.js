@@ -1,41 +1,59 @@
-const express = require('express');
-const router  = express.Router();
-const alphaKey = 'AKW7U8FI1GS9YXYK'
+const express = require("express");
+const router = express.Router();
+const alphaKey = "AKW7U8FI1GS9YXYK";
+const mongoose = require("mongoose");
 
-const Company = require('../models/company');
+const Company = require("../models/company");
+const User = require("../models/User.model");
 
 /* GET home page */
-router.get('/', (req, res, next) => {
-  Company.find()
-  .then(companies => res.render('index', {companies, alphaKey}))
-  .catch(err => `Error : ${err}`)
+router.get("/", async (req, res, next) => {
+  try {
+    //await Company.deleteMany({});
+    const companies = await Company.find();
+    if (req.session.currentUser) {
+      const { username } = req.session.currentUser;
+      res.render("index", { companies, alphaKey, username });
+    }
+    res.render("index", { companies, alphaKey });
+  } catch (error) {
+    next(error);
+  }
 });
 
-router.get('/add', (req, res, next) => {
-  res.render('add-company');
+router.get("/add", (req, res, next) => {
+  res.render("add-company", req.session.currentUser);
 });
 
-router.post('/add', (req, res, next) => {
-  Company.create(req.body)
-  .then(company => {
-    console.log("Company added with success !")
-    res.redirect('/')
-  })
-  .catch(err => `Error : ${err}`)
+router.post("/add", async (req, res, next) => {
+  const user = req.session.currentUser;
+  if (user) {
+    const newUserCompany = await Company.create(req.body);
+    user.companies.push(newUserCompany);
+    //await user.save();
+    await Company.findByIdAndDelete(newUserCompany._id);
+    console.log("Company added with success !");
+    res.redirect("/user-profile");
+  } else {
+    Company.create(req.body).then(() => {
+      console.log("Company added with success (2) !");
+      res.redirect("/").catch((err) => `Error : ${err}`);
+    });
+  }
 });
 
-router.get('/delete/:id', (req, res, next) => {
+router.get("/delete/:id", (req, res, next) => {
   Company.findByIdAndDelete(req.params.id)
-  .then((company) => {
-    console.log(`${company.name} deleted!`)
-    res.redirect('/')
-  })
-  .catch(err => `Error : ${err}`)
-})
+    .then((company) => {
+      console.log(`${company.name} deleted!`);
+      res.redirect("/");
+    })
+    .catch((err) => `Error : ${err}`);
+});
 
-router.post('/findOptions', (req, res, next) => {
-  const {symbolName} = req.body;
-  res.render('options', {symbolName})
-})
+router.post("/findOptions", (req, res, next) => {
+  const { symbolName } = req.body;
+  res.render("options", { symbolName });
+});
 
 module.exports = router;
