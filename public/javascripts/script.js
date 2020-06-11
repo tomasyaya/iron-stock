@@ -6,7 +6,6 @@ async function printCharts(shortName) {
   
   try {
     const responseFromAPI = await axios.get(apiUrl);
-    console.log(responseFromAPI);
     printTheChart(responseFromAPI.data, symbolName);
   } catch (error) {
     console.log('Error while getting the data: ', error);
