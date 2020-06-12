@@ -9,7 +9,6 @@ const User = require("../models/User.model");
 /* GET home page */
 router.get("/", async (req, res, next) => {
   try {
-    //await Company.deleteMany({});
     const companies = await Company.find();
     if (req.session.currentUser) {
       const { username } = req.session.currentUser;
@@ -28,11 +27,12 @@ router.get("/add", (req, res, next) => {
 router.post("/add", async (req, res, next) => {
   const user = req.session.currentUser;
   if (user) {
+    const userId = req.session.currentUser._id;
     const newUserCompany = await Company.create(req.body);
-    user.companies.push(newUserCompany);
-    //await user.save();
+    await User.findByIdAndUpdate(userId, {
+      $push: { companies: newUserCompany },
+    });
     await Company.findByIdAndDelete(newUserCompany._id);
-    console.log("Company added with success !");
     res.redirect("/user-profile");
   } else {
     Company.create(req.body).then(() => {
