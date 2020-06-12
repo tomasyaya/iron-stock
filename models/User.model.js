@@ -23,10 +23,7 @@ const userSchema = new Schema(
     companies: [
       {
         name: String,
-        symbolName: {
-          type: String,
-          unique: true,
-        },
+        symbolName: String,
       },
     ],
   },

@@ -9,14 +9,14 @@
 <div class="container">
     <div class="row">
         {{#each companies}}
-            <div class="card text-center m-5 w-100" id="actionsCard">
-                <canvas id="my-chart-{{symbolName}}"></canvas>
-                <div class="card-body">
-                    <span class="card-title"><a href="/chart/{{_id}}">{{name}}</a></span>
-                    <span class="symbolName">{{symbolName}}</span>
-                    <a href="/delete/{{_id}}" class="btn btn-danger text-white mx-3">Delete</a>
-                </div>
+        <div class="card text-center m-5 w-100" id="actionsCard">
+            <canvas id="my-chart-{{symbolName}}"></canvas>
+            <div class="card-body">
+                <span class="card-title"><a href="/chart/{{_id}}">{{name}}</a></span>
+                <span class="symbolName">{{symbolName}}</span>
+                <a href="/delete/{{_id}}" class="btn btn-danger text-white mx-3">Delete</a>
             </div>
+        </div>
         {{/each}}
     </div>
 </div>

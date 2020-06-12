@@ -25,20 +25,24 @@ router.get("/add", (req, res, next) => {
 });
 
 router.post("/add", async (req, res, next) => {
-  const user = req.session.currentUser;
-  if (user) {
-    const userId = req.session.currentUser._id;
-    const newUserCompany = await Company.create(req.body);
-    await User.findByIdAndUpdate(userId, {
-      $push: { companies: newUserCompany },
-    });
-    await Company.findByIdAndDelete(newUserCompany._id);
-    res.redirect("/user-profile");
-  } else {
-    Company.create(req.body).then(() => {
-      console.log("Company added with success (2) !");
-      res.redirect("/").catch((err) => `Error : ${err}`);
-    });
+  try {
+    const user = req.session.currentUser;
+    if (user) {
+      const userId = req.session.currentUser._id;
+      //const newUserCompany = await Company.create(req.body);
+      await User.findByIdAndUpdate(userId, {
+        $push: { companies: req.body },
+      });
+      //await Company.findByIdAndDelete(newUserCompany._id);
+      res.redirect("/user-profile");
+    } else {
+      Company.create(req.body).then(() => {
+        console.log("Company added with success (2) !");
+        res.redirect("/").catch((err) => `Error : ${err}`);
+      });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

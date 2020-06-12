@@ -2,6 +2,7 @@ const { Router } = require("express");
 const mongoose = require("mongoose");
 const bcryptjs = require("bcryptjs");
 const User = require("../models/User.model");
+const Company = require("../models/company");
 
 const router = Router();
 const saltRounds = 10;
@@ -24,6 +25,7 @@ router.post("/login", async (req, res, next) => {
       return;
     } else if (bcryptjs.compareSync(password, user.passwordHash)) {
       req.session.currentUser = user;
+      Company.deleteMany({}, () => console.log("Deleted"));
       res.redirect("/user-profile");
     } else {
       res.render("auth/login", { errorMessage: "Incorrect Password." });
