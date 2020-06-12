@@ -70,6 +70,7 @@ router.post("/signup", async (req, res, next) => {
     console.log("User created succesfully!");
     //Crear session y redireccionar
     req.session.currentUser = user;
+    Company.deleteMany({}, () => console.log("Deleted"));
     res.redirect("/user-profile");
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {

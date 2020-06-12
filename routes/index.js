@@ -13,8 +13,9 @@ router.get("/", async (req, res, next) => {
     if (req.session.currentUser) {
       const { username } = req.session.currentUser;
       res.render("index", { companies, alphaKey, username });
+    } else {
+      res.render("index", { companies, alphaKey });
     }
-    res.render("index", { companies, alphaKey });
   } catch (error) {
     next(error);
   }
@@ -29,18 +30,16 @@ router.post("/add", async (req, res, next) => {
     const user = req.session.currentUser;
     if (user) {
       const userId = req.session.currentUser._id;
-      //const newUserCompany = await Company.create(req.body);
       await User.findByIdAndUpdate(userId, {
         $push: { companies: req.body },
       });
-      //await Company.findByIdAndDelete(newUserCompany._id);
       res.redirect("/user-profile");
     } else {
-      Company.create(req.body).then(() => {
-        console.log("Company added with success (2) !");
-        res.redirect("/").catch((err) => `Error : ${err}`);
-      });
-    }
+      Company.deleteMany({}, () => console.log("Deleted"));
+      await Company.create(req.body);
+      console.log("Company added with success (2) !");
+      res.redirect("/");
+    };
   } catch (error) {
     console.log(error);
   }
@@ -57,7 +56,13 @@ router.get("/delete/:id", (req, res, next) => {
 
 router.post("/findOptions", (req, res, next) => {
   const { symbolName } = req.body;
-  res.render("options", { symbolName });
+  const user = req.session.currentUser;
+  if (user) {
+    const {username} = user;
+    res.render("options", {symbolName, username});    
+  } else {
+    res.render("options", {symbolName});
+  }
 });
 
 module.exports = router;

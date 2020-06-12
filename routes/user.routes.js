@@ -9,7 +9,6 @@ router.get("/user-profile", async (req, res, next) => {
     const { username, _id } = req.session.currentUser;
     const userCompanies = await User.findById(_id, "companies");
     const [...companies] = userCompanies.companies;
-    console.log(companies);
     res.render("user/user-profile", { username, companies, alphaKey });
   } catch (error) {
     console.log(error);
