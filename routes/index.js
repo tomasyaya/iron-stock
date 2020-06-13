@@ -45,13 +45,20 @@ router.post("/add", async (req, res, next) => {
   }
 });
 
-router.get("/delete/:id", (req, res, next) => {
-  Company.findByIdAndDelete(req.params.id)
-    .then((company) => {
+router.get("/delete/:id", async (req, res, next) => {
+  try {
+    const user = req.session.currentUser;
+    if (user) {
+      await User.findByIdAndUpdate(user._id, {$pull: {companies: {_id: req.params.id}}});
+      res.redirect("/user-profile");
+    } else {
+      const company = await Company.findByIdAndDelete(req.params.id);
       console.log(`${company.name} deleted!`);
       res.redirect("/");
-    })
-    .catch((err) => `Error : ${err}`);
+    }
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/findOptions", (req, res, next) => {
